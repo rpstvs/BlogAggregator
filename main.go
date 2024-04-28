@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"github.com/rpstvs/BlogAggregator/internal/database"
 )
 
@@ -15,10 +16,12 @@ type apiConfig struct {
 }
 
 func main() {
-	godotenv.Load()
+	godotenv.Load(".env")
 	port := os.Getenv("PORT")
-	dbUrl := os.Getenv("DBURL")
-	db, err := sql.Open("postgres", dbUrl)
+
+	dbURL := os.Getenv("DATABASE_URL")
+
+	db, err := sql.Open("postgres", dbURL)
 
 	if err != nil {
 		log.Printf("Couldnt open a connection to the database")

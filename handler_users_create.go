@@ -6,19 +6,13 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/rpstvs/BlogAggregator/internal/database"
 )
-
-type User struct {
-	Name       string    `json:"name"`
-	Created_at time.Time `json: "created_at"`
-	Updated_at time.Time `json: "updated_at`
-	Id         uuid.UUID `json:"id"`
-}
 
 func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	type parameters struct {
-		Body string `json:"body"`
+		Body string
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -31,5 +25,18 @@ func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 		respondwithError(w, http.StatusBadRequest, "couldnt decode params")
 		return
 	}
+
+	user, err := cfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		Name:      params.Body,
+	})
+
+	if err != nil {
+		respondwithError(w, http.StatusInternalServerError, "couldnt create user")
+	}
+
+	respondwithJSON(w, http.StatusOK, user)
 
 }
