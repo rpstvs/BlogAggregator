@@ -36,6 +36,8 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/", http.FileServer(http.Dir(".")))
 	mux.HandleFunc("POST /v1/users", apiCfg.CreateUser)
+	mux.HandleFunc("GET /v1/users", apiCfg.GetUserbyKey)
+
 	mux.HandleFunc("GET /v1/readiness", Readiness)
 	mux.HandleFunc("GET /v1/err", errorHandler)
 
