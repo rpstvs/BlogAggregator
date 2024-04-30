@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
+)
 
 func (cfg *apiConfig) GetUserbyKey(w http.ResponseWriter, r *http.Request) {
 	apiKey := r.Header.Get("Authorization")
@@ -10,12 +13,15 @@ func (cfg *apiConfig) GetUserbyKey(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	apiKey = apiKey[len("ApiKey "):]
+	tmp := strings.Split(apiKey, " ")
+
+	apiKey = tmp[1]
 
 	user, err := cfg.DB.GetUserByAPIKey(r.Context(), apiKey)
 
 	if err != nil {
 		respondwithError(w, http.StatusNotFound, "user not found")
+		return
 	}
 
 	respondwithJSON(w, http.StatusOK, user)
