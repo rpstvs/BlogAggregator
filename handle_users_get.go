@@ -2,20 +2,16 @@ package main
 
 import (
 	"net/http"
-	"strings"
+
+	"github.com/rpstvs/BlogAggregator/auth"
 )
 
 func (cfg *apiConfig) GetUserbyKey(w http.ResponseWriter, r *http.Request) {
-	apiKey := r.Header.Get("Authorization")
+	apiKey, err := auth.GetApiKey(r.Header)
 
-	if apiKey == "" {
-		respondwithError(w, http.StatusBadRequest, "Not authorized")
-		return
+	if err != nil {
+		respondwithError(w, http.StatusBadRequest, err.Error())
 	}
-
-	tmp := strings.Split(apiKey, " ")
-
-	apiKey = tmp[1]
 
 	user, err := cfg.DB.GetUserByAPIKey(r.Context(), apiKey)
 
@@ -24,5 +20,5 @@ func (cfg *apiConfig) GetUserbyKey(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondwithJSON(w, http.StatusOK, user)
+	respondwithJSON(w, http.StatusOK, databaseUsertoUser(user))
 }
