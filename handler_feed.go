@@ -37,3 +37,14 @@ func (cfg *apiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user da
 
 	respondwithJSON(w, http.StatusOK, databaseFeedtoFeed(feed))
 }
+
+func (cfg *apiConfig) GetFeeds(w http.ResponseWriter, r *http.Request) {
+	feed, err := cfg.DB.GetFeeds(r.Context())
+
+	if err != nil {
+		respondwithError(w, http.StatusBadRequest, "couldnt retrieve feeds")
+		return
+	}
+
+	respondwithJSON(w, http.StatusOK, feed)
+}
