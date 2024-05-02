@@ -12,8 +12,8 @@ import (
 func (cfg *apiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	type parameters struct {
-		Name string `json:"name"`
-		Url  string `json:"url"`
+		Name string
+		Url  string
 	}
 	decoder := json.NewDecoder(r.Body)
 
@@ -28,10 +28,12 @@ func (cfg *apiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user da
 
 	feed, err := cfg.DB.CreateFeed(r.Context(), database.CreateFeedParams{
 		ID:        uuid.New(),
-		Name:      params.Name,
-		Url:       params.Url,
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
+		Name:      params.Name,
+		Url:       params.Url,
 		UserID:    user.ID,
 	})
+
+	respondwithJSON(w, http.StatusOK, databaseFeedtoFeed(feed))
 }

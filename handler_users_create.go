@@ -12,7 +12,7 @@ import (
 func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	type parameters struct {
-		Body string
+		Name string
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -30,7 +30,7 @@ func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
-		Name:      params.Body,
+		Name:      params.Name,
 	})
 
 	if err != nil {

@@ -1,5 +1,5 @@
 -- name: CreateUser :one
-INSERT INTO users (id, created_at, updated_at, name, apikey)
+INSERT INTO users (id, created_at, updated_at, name, api_key)
 VALUES (
         $1,
         $2,
@@ -10,5 +10,5 @@ VALUES (
 RETURNING *;
 -- name: GetUserByAPIKey :one
 SELECT *
-from users
+FROM users
 WHERE api_key = $1;

@@ -13,7 +13,7 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, created_at, updated_at, name, apikey)
+INSERT INTO users (id, created_at, updated_at, name, api_key)
 VALUES (
         $1,
         $2,
@@ -51,7 +51,7 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 
 const getUserByAPIKey = `-- name: GetUserByAPIKey :one
 SELECT id, created_at, updated_at, name, api_key
-from users
+FROM users
 WHERE api_key = $1
 `
 
