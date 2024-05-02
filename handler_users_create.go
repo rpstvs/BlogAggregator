@@ -40,3 +40,8 @@ func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 	respondwithJSON(w, http.StatusOK, databaseUsertoUser(user))
 
 }
+
+func (cfg *apiConfig) GetUserbyKey(w http.ResponseWriter, r *http.Request, user database.User) {
+
+	respondwithJSON(w, http.StatusOK, databaseUsertoUser(user))
+}
