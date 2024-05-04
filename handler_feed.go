@@ -35,6 +35,24 @@ func (cfg *apiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user da
 		UserID:    user.ID,
 	})
 
+	if err != nil {
+		respondwithError(w, http.StatusInternalServerError, "Couldnt create feed")
+		return
+	}
+
+	_, err = cfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
+		ID:        uuid.New(),
+		CreatedAt: time.Now().UTC(),
+		UpdatedAt: time.Now().UTC(),
+		UserID:    user.ID,
+		FeedID:    feed.ID,
+	})
+
+	if err != nil {
+		respondwithError(w, http.StatusInternalServerError, "Feed follow not created")
+		return
+	}
+
 	respondwithJSON(w, http.StatusOK, databaseFeedtoFeed(feed))
 }
 

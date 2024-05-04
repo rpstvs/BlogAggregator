@@ -9,6 +9,17 @@ import (
 	"github.com/rpstvs/BlogAggregator/internal/database"
 )
 
+func (cfg *apiConfig) RetrieveFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
+	feedFollow, err := cfg.DB.GetFeedFollows(r.Context())
+
+	if err != nil {
+		respondwithError(w, http.StatusInternalServerError, "Couldnt retrieve feed follow")
+		return
+	}
+
+	respondwithJSON(w, http.StatusOK, feedFollow)
+}
+
 func (cfg *apiConfig) CreateFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
 	type parameters struct {
 		Feed_id uuid.UUID
@@ -38,7 +49,7 @@ func (cfg *apiConfig) CreateFeedFollow(w http.ResponseWriter, r *http.Request, u
 		return
 	}
 
-	respondwithJSON(w, http.StatusOK, feedfollow)
+	respondwithJSON(w, http.StatusOK, databaseFollowtoFollow(feedfollow))
 }
 
 func (cfg *apiConfig) DeleteFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
