@@ -8,3 +8,10 @@ VALUES (
         $5
     )
 RETURNING *;
+-- name: DeleteFeedFollow :exec
+DELETE FROM feedfollow
+WHERE id = $1
+    and user_id = $2;
+-- name: GetFeedFollows :many
+SELECT *
+From feedfollow;

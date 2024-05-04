@@ -11,7 +11,7 @@ import (
 
 func (cfg *apiConfig) CreateFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
 	type parameters struct {
-		Feed_id string
+		Feed_id uuid.UUID
 	}
 
 	decoder := json.NewDecoder(r.Body)
@@ -25,14 +25,12 @@ func (cfg *apiConfig) CreateFeedFollow(w http.ResponseWriter, r *http.Request, u
 		return
 	}
 
-	id := uuid.MustParse(params.Feed_id)
-
 	feedfollow, err := cfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		UserID:    user.ID,
-		FeedID:    id,
+		FeedID:    params.Feed_id,
 	})
 
 	if err != nil {
@@ -41,4 +39,27 @@ func (cfg *apiConfig) CreateFeedFollow(w http.ResponseWriter, r *http.Request, u
 	}
 
 	respondwithJSON(w, http.StatusOK, feedfollow)
+}
+
+func (cfg *apiConfig) DeleteFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
+
+	id := r.PathValue("feedFollowID")
+
+	followId, err := uuid.Parse(id)
+
+	if err != nil {
+		respondwithError(w, http.StatusBadRequest, "Couldnt parse feed follow id")
+		return
+	}
+
+	err = cfg.DB.DeleteFeedFollow(r.Context(), database.DeleteFeedFollowParams{
+		ID:     followId,
+		UserID: user.ID,
+	})
+
+	if err != nil {
+		respondwithError(w, http.StatusInternalServerError, "couldnt delete the feed follow")
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

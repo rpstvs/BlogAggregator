@@ -35,6 +35,7 @@ func (cfg *apiConfig) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		respondwithError(w, http.StatusInternalServerError, "couldnt create user")
+		return
 	}
 
 	respondwithJSON(w, http.StatusOK, databaseUsertoUser(user))
