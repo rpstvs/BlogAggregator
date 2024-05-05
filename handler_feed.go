@@ -40,7 +40,7 @@ func (cfg *apiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user da
 		return
 	}
 
-	_, err = cfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
+	feedFollow, err := cfg.DB.CreateFeedFollow(r.Context(), database.CreateFeedFollowParams{
 		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
@@ -53,7 +53,13 @@ func (cfg *apiConfig) CreateFeed(w http.ResponseWriter, r *http.Request, user da
 		return
 	}
 
-	respondwithJSON(w, http.StatusOK, databaseFeedtoFeed(feed))
+	respondwithJSON(w, http.StatusOK, struct {
+		feed       Feed
+		feedFollow Feedfollow
+	}{
+		feed:       databaseFeedtoFeed(feed),
+		feedFollow: databaseFollowtoFollow(feedFollow),
+	})
 }
 
 func (cfg *apiConfig) GetFeeds(w http.ResponseWriter, r *http.Request) {
