@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/google/uuid"
@@ -26,12 +27,13 @@ func databaseUsertoUser(user database.User) User {
 }
 
 type Feed struct {
-	ID        uuid.UUID
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	Name      string
-	Url       string
-	UserID    uuid.UUID
+	ID            uuid.UUID
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	Name          string
+	Url           string
+	UserID        uuid.UUID
+	LastFetchedAt sql.NullTime
 }
 
 func databaseFeedtoFeed(feed database.Feed) Feed {
@@ -61,4 +63,22 @@ func databaseFollowtoFollow(feedFollow database.Feedfollow) Feedfollow {
 		UserID:    feedFollow.UserID,
 		FeedID:    feedFollow.FeedID,
 	}
+}
+
+func databaseFeedsFollowToFeedsFollow(feeds []database.Feedfollow) []Feedfollow {
+
+	result := make([]Feedfollow, len(feeds))
+
+	for i, feedFollow := range feeds {
+		result[i] = databaseFollowtoFollow(feedFollow)
+	}
+	return result
+}
+
+func nullTimeToTimePtr(t sql.NullTime) *time.Time {
+	if t.Valid {
+		return &t.Time
+	}
+
+	return nil
 }

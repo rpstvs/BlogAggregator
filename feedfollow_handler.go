@@ -17,7 +17,7 @@ func (cfg *apiConfig) RetrieveFeedFollow(w http.ResponseWriter, r *http.Request,
 		return
 	}
 
-	respondwithJSON(w, http.StatusOK, feedFollow)
+	respondwithJSON(w, http.StatusOK, databaseFeedsFollowToFeedsFollow(feedFollow))
 }
 
 func (cfg *apiConfig) CreateFeedFollow(w http.ResponseWriter, r *http.Request, user database.User) {
