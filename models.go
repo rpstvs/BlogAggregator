@@ -83,3 +83,13 @@ func nullTimeToTimePtr(t sql.NullTime) *time.Time {
 
 	return nil
 }
+
+type Post struct {
+	ID          uuid.UUID
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	Title       string
+	Description string
+	PublishedAt time.Time
+	FeedID      uuid.UUID
+}
