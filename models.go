@@ -93,3 +93,26 @@ type Post struct {
 	PublishedAt time.Time
 	FeedID      uuid.UUID
 }
+
+func databasePostToPost(post database.Post) Post {
+
+	return Post{
+		ID:          post.ID,
+		CreatedAt:   post.CreatedAt,
+		UpdatedAt:   post.UpdatedAt,
+		Title:       post.Title,
+		Description: post.Description,
+		PublishedAt: post.PublishedAt,
+		FeedID:      post.FeedID,
+	}
+}
+
+func sliceDatabasePoststoSlicePosts(posts []database.Post) []Post {
+	result := make([]Post, len(posts))
+
+	for i, post := range posts {
+		result[i] = databasePostToPost(post)
+	}
+
+	return result
+}
